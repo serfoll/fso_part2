@@ -6,8 +6,7 @@
 Create a simple react phonebook app
 
 ### 2.11
-Phonebook app: store data in local JSON file
-
+Phonebook app: get and store data from server
 ### 2.12-2.15
 Phonebook app: communication with backend server, storing and deleting data.
 
