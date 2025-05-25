@@ -2,4 +2,3 @@
 node_modules/
 .vite/
 package-lock.json
-.prettierignore
