@@ -1,10 +1,11 @@
 /** @format */
 
 const Persons = ({ persons, filter }) => {
-  const filteredPersons =
+  const filteredPersons = (
     filter.length > 0
       ? persons.filter((person) => person.name.toLowerCase().includes(filter))
-      : persons;
+      : persons
+  ).sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div>
