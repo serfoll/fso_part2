@@ -13,12 +13,13 @@ const Persons = ({ persons }) => (
 const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
+  const [errorMsg, setErrMsg] = useState("");
 
   const addNewName = (e) => {
     e.preventDefault();
 
     if (!newName || newName === "") {
-      alert("Name can't be empty");
+      setErrMsg("Name can't be empty");
       return;
     }
 
@@ -35,7 +36,9 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-
+      {errorMsg && errorMsg !== "" && (
+        <p style={{ color: "red" }}>{errorMsg}</p>
+      )}
       <form onSubmit={addNewName}>
         <div>
           <label htmlFor="newName">name:</label>
@@ -44,7 +47,10 @@ const App = () => {
             name="newName"
             placeholder="John Doe"
             value={newName}
-            onChange={(e) => setNewName(e.target.value)}
+            onChange={(e) => {
+              e.target.value.length > 0 && setErrMsg("");
+              setNewName(e.target.value);
+            }}
           />
         </div>
         <div>
