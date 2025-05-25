@@ -24,13 +24,19 @@ const App = () => {
     }
 
     const newPerson = {
-      name: newName,
+      name: newName.trim(),
     };
+
+    if (persons.some((person) => person.name === newPerson.name)) {
+      setErrMsg(`${newName} is already added to phonebook`);
+      return;
+    }
 
     console.log("add: ", newPerson);
 
     setPersons(persons.concat(newPerson));
     setNewName("");
+    setErrMsg("");
   };
 
   return (
@@ -47,10 +53,7 @@ const App = () => {
             name="newName"
             placeholder="John Doe"
             value={newName}
-            onChange={(e) => {
-              e.target.value.length > 0 && setErrMsg("");
-              setNewName(e.target.value);
-            }}
+            onChange={(e) => setNewName(e.target.value)}
           />
         </div>
         <div>
