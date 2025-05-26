@@ -121,6 +121,7 @@ const App = () => {
             text: `"${person.name}" is already removed from the server`,
             type: "error",
           });
+          setPersons(persons.filter((p) => p.id !== person.id));
         });
     }
   };
