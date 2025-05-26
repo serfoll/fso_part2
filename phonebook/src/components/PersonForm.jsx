@@ -1,30 +1,32 @@
 /** @format */
 
 const PersonForm = ({
-  addNewName,
+  addNewPerson,
   newName,
   setNewName,
   newNumber,
   setNewNumber,
 }) => (
-  <form onSubmit={addNewName}>
+  <form onSubmit={addNewPerson}>
     <div>
-      <label htmlFor="newName">name: </label>
+      <label htmlFor="name">name: </label>
       <input
-        id="newName"
-        name="new name"
+        id="name"
+        name="name"
         onChange={(e) => setNewName(e.target.value.trimStart())}
         placeholder="John Doe"
         value={newName}
       />
     </div>
     <div>
-      <label htmlFor="newNumber">number: </label>
+      <label htmlFor="number">number: </label>
       <input
-        id="newNumber"
-        name="new number"
-        onChange={(e) => setNewNumber(e.target.value.trimStart())}
-        placeholder="012-345 67 80"
+        id="number"
+        name="number"
+        onChange={(e) => setNewNumber(e.target.value.trim())}
+        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+        placeholder="012-347-6780"
+        type="tel"
         value={newNumber}
       />
     </div>

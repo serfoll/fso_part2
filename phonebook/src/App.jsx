@@ -1,7 +1,9 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+
+import personsServices from "./services/persons";
+import helpers from "./utils/helpers";
 
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
@@ -15,18 +17,13 @@ const App = () => {
   const [errorMsg, setErrMsg] = useState("");
   const [filter, setFilter] = useState("");
 
-  const addNewName = (e) => {
+  const addNewPerson = (e) => {
     e.preventDefault();
+
+    if (errorMsg.length > 0) setErrMsg("");
 
     if (!newName || newName === "") {
       setErrMsg("Please provide a name!");
-      return;
-    } else if (
-      persons.some(
-        (person) => person.name.toLowerCase() === newName.toLowerCase()
-      )
-    ) {
-      setErrMsg(`"${newName}" is already added to phonebook`);
       return;
     } else if (!newNumber || newNumber === "") {
       setErrMsg("Please provide a number!");
@@ -34,32 +31,89 @@ const App = () => {
     }
 
     const newPerson = {
-      id: persons.length + 1,
       name: newName.trim(),
       number: newNumber.trim(),
     };
 
-    console.log("add: ", newPerson);
+    if (
+      persons.some(
+        (person) =>
+          person.name.toLowerCase() === newPerson.name.toLowerCase() &&
+          helpers.normalizeNumber(person.number) ===
+            helpers.normalizeNumber(newPerson.number)
+      )
+    ) {
+      setErrMsg(`"${newName}" is already added to phonebook`);
+      return;
+    } else if (
+      persons.some(
+        (person) =>
+          person.name.toLowerCase() === newPerson.name.toLowerCase() &&
+          helpers.normalizeNumber(person.number) !==
+            helpers.normalizeNumber(newPerson.number)
+      )
+    ) {
+      const personToUpdate = persons.find(
+        (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+      );
 
-    setPersons(persons.concat(newPerson));
-    setNewName("");
-    setNewNumber("");
-    setErrMsg("");
+      const updatedPersonData = { ...personToUpdate, number: newPerson.number };
+
+      updatePerson(updatedPersonData);
+    } else {
+      createPerson(newPerson);
+    }
+  };
+
+  const createPerson = (newPerson) => {
+    console.log("new person to add", newPerson);
+
+    personsServices.create(newPerson).then((personCreated) => {
+      setPersons(persons.concat(personCreated));
+      setNewName("");
+      setNewNumber("");
+      setErrMsg("");
+      console.log("person added: ", newPerson);
+    });
+  };
+
+  const updatePerson = (person) => {
+    console.log("person to update", person);
+
+    if (
+      window.confirm(
+        `${person.name} is already in phonebook, would you like to update the number?`
+      )
+    ) {
+      personsServices
+        .update(person.id, person)
+        .then((updatedPerson) =>
+          setPersons(
+            persons.map((person) =>
+              person.id === updatedPerson.id ? updatedPerson : person
+            )
+          )
+        );
+    }
+  };
+
+  const onDeletePerson = (person) => {
+    console.log("person to delete", person.id);
+
+    if (window.confirm(`Delete ${person.name}`)) {
+      personsServices.deletePerson(person.id).then((personDeleted) => {
+        console.log("person delete", personDeleted);
+        setPersons(persons.filter((person) => person.id !== personDeleted.id));
+      });
+    }
   };
 
   useEffect(() => {
-    console.log("persons hook");
-    const serverUrl = "http://localhost:3001";
-    axios
-      .get(`${serverUrl}/persons`)
-      .then((res) => {
-        setPersons(res.data);
-      })
-      .catch((err) => {
-        console.error("request failed:", err);
-      });
+    personsServices.getAll().then((initalPersons) => {
+      console.log("getAll result:", initalPersons);
+      setPersons(initalPersons);
+    });
   }, []);
-  console.log("render", persons.length, "peronsons");
 
   return (
     <div>
@@ -70,14 +124,18 @@ const App = () => {
         <p style={{ color: "red", fontWeight: "bold" }}>{errorMsg}</p>
       )}
       <PersonForm
-        addNewName={addNewName}
+        addNewPerson={addNewPerson}
         newName={newName}
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter.trim().toLowerCase()} />
+      <Persons
+        persons={persons}
+        filter={filter.trim().toLowerCase()}
+        deletePerson={onDeletePerson}
+      />
     </div>
   );
 };
