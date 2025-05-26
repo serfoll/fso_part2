@@ -18,7 +18,6 @@ const getAll = () => {
 
 const create = (personObj) => {
   const req = axios.post(baseUrl, personObj);
-
   const data = req
     .then((res) => res.data)
     .catch((err) => {

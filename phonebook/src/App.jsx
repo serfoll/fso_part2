@@ -82,15 +82,15 @@ const App = () => {
         setNewName("");
         setNewNumber("");
         setNotificationMessage({
-          text: `${personCreated.name} has been added`,
+          text: `"${personCreated.name}" has been added`,
           type: "success",
         });
         console.log("person added: ", newPerson);
       })
       .catch(() => {
         setNotificationMessage({
-          text: `Failed to add ${newPerson.name} `,
-          type: "success",
+          text: `Failed to add "${newPerson.name}" `,
+          type: "error",
         });
       });
   };
@@ -100,7 +100,7 @@ const App = () => {
 
     if (
       window.confirm(
-        `${person.name} is already in phonebook, would you like to update the number?`
+        `"${person.name}" is already in phonebook, would you like to update the number?`
       )
     ) {
       personsServices
@@ -143,7 +143,7 @@ const App = () => {
         })
         .catch(() => {
           setNotificationMessage({
-            text: `"Failed to delete ${person.name}"`,
+            text: `"${person.name}" already deleted`,
             type: "error",
           });
           setPersons(
@@ -154,9 +154,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    personsServices.getAll().then((initalPersons) => {
-      console.log("getAll result:", initalPersons);
-      setPersons(initalPersons);
+    personsServices.getAll().then((initialPersons) => {
+      console.log("getAll result:", initialPersons);
+      setPersons(initialPersons);
     });
   }, []);
 
