@@ -8,25 +8,29 @@ import helpers from "./utils/helpers";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [errorMsg, setErrMsg] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
   const [filter, setFilter] = useState("");
 
   const addNewPerson = (e) => {
     e.preventDefault();
 
-    if (errorMsg.length > 0) setErrMsg("");
+    if (notificationMessage !== null) setNotificationMessage(null);
 
     if (!newName || newName === "") {
-      setErrMsg("Please provide a name!");
+      setNotificationMessage({ text: "Please provide a name!", type: "error" });
       return;
     } else if (!newNumber || newNumber === "") {
-      setErrMsg("Please provide a number!");
+      setNotificationMessage({
+        text: "Please provide a phone number!",
+        type: "error",
+      });
       return;
     }
 
@@ -43,7 +47,10 @@ const App = () => {
             helpers.normalizeNumber(newPerson.number)
       )
     ) {
-      setErrMsg(`"${newName}" is already added to phonebook`);
+      setNotificationMessage({
+        text: `"${newName}" is already added to phonebook`,
+        type: "warning",
+      });
       return;
     } else if (
       persons.some(
@@ -68,13 +75,24 @@ const App = () => {
   const createPerson = (newPerson) => {
     console.log("new person to add", newPerson);
 
-    personsServices.create(newPerson).then((personCreated) => {
-      setPersons(persons.concat(personCreated));
-      setNewName("");
-      setNewNumber("");
-      setErrMsg("");
-      console.log("person added: ", newPerson);
-    });
+    personsServices
+      .create(newPerson)
+      .then((personCreated) => {
+        setPersons(persons.concat(personCreated));
+        setNewName("");
+        setNewNumber("");
+        setNotificationMessage({
+          text: `${personCreated.name} has been added`,
+          type: "success",
+        });
+        console.log("person added: ", newPerson);
+      })
+      .catch(() => {
+        setNotificationMessage({
+          text: `Failed to add ${newPerson.name} `,
+          type: "success",
+        });
+      });
   };
 
   const updatePerson = (person) => {
@@ -87,13 +105,23 @@ const App = () => {
     ) {
       personsServices
         .update(person.id, person)
-        .then((updatedPerson) =>
+        .then((updatedPerson) => {
           setPersons(
             persons.map((person) =>
               person.id === updatedPerson.id ? updatedPerson : person
             )
-          )
-        );
+          );
+          setNotificationMessage({
+            text: `"${person.name}" has been updated`,
+            type: "success",
+          });
+        })
+        .catch(() => {
+          setNotificationMessage({
+            text: `"${person.name}" is already removed from the server`,
+            type: "error",
+          });
+        });
     }
   };
 
@@ -101,10 +129,27 @@ const App = () => {
     console.log("person to delete", person.id);
 
     if (window.confirm(`Delete ${person.name}`)) {
-      personsServices.deletePerson(person.id).then((personDeleted) => {
-        console.log("person delete", personDeleted);
-        setPersons(persons.filter((person) => person.id !== personDeleted.id));
-      });
+      personsServices
+        .deletePerson(person.id)
+        .then((personDeleted) => {
+          console.log("person delete", personDeleted);
+          setPersons(
+            persons.filter((person) => person.id !== personDeleted.id)
+          );
+          setNotificationMessage({
+            text: `"${person.name}" has been deleted`,
+            type: "success",
+          });
+        })
+        .catch(() => {
+          setNotificationMessage({
+            text: `"Failed to delete ${person.name}"`,
+            type: "error",
+          });
+          setPersons(
+            persons.filter((currentPerson) => currentPerson.id !== person.id)
+          );
+        });
     }
   };
 
@@ -115,14 +160,19 @@ const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (notificationMessage) {
+      const timer = setTimeout(() => setNotificationMessage(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [notificationMessage]);
+
   return (
     <div>
       <h1>Phonebook</h1>
       <Filter filter={filter} setFilter={setFilter} />
       <h2>Add a new number</h2>
-      {errorMsg && errorMsg !== "" && (
-        <p style={{ color: "red", fontWeight: "bold" }}>{errorMsg}</p>
-      )}
+      <Notification msg={notificationMessage} />
       <PersonForm
         addNewPerson={addNewPerson}
         newName={newName}
