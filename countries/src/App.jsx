@@ -1,24 +1,26 @@
 /** @format */
 import { useEffect, useState } from "react";
+import countriesService from "./services/countries";
+
+import Notification from "./components/Notification";
+import Filter from "./components/Filter";
+import FilteredCountries from "./components/FilteredCountries";
 
 function App() {
+  const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    if (!filter || filter === "") return;
-    console.log("current filter: ", filter);
-  }, [filter]);
+    console.log("getting all countries");
+    countriesService
+      .getAll()
+      .then((countriesData) => setCountries(countriesData));
+  }, []);
 
   return (
     <div>
-      <label htmlFor="countrie">find countries: </label>
-      <input
-        onChange={(e) => setFilter(e.target.value)}
-        id="countrie"
-        name="countrie"
-        type="text"
-        value={filter}
-      />
+      <Filter filter={filter} onFilter={setFilter} />
+      <FilteredCountries countries={countries} filter={filter} />
     </div>
   );
 }
