@@ -9,7 +9,7 @@ const Filter = ({ filter, onFilter }) => {
         id="countrie"
         name="countrie"
         type="text"
-        value={filter}
+        value={filter.toLowerCase()}
       />
     </div>
   );

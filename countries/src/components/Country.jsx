@@ -1,8 +1,20 @@
 /** @format */
 
 const Country = ({ country }) => {
-  const { name, area, capital, languages, flags, currencies, population } =
-    country;
+  const {
+    name,
+    area,
+    capital,
+    languages,
+    flags,
+    currencies,
+    population,
+    region,
+    subregion,
+    ...rest
+  } = country;
+
+  //console.log(JSON.stringify(rest, null, 2));
 
   return (
     <div>
@@ -27,6 +39,13 @@ const Country = ({ country }) => {
         <b>Population: </b>
         {population}
       </p>
+      <p>
+        <b>Region:</b> {region}
+      </p>
+      <p>
+        <b>Sub Region:</b> {subregion}
+      </p>
+
       <h2>Languages</h2>
       <ul>
         {Object.values(languages).map((lang) => (
