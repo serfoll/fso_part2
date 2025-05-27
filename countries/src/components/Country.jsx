@@ -1,60 +1,83 @@
 /** @format */
 
 const Country = ({ country, onHideCountry }) => {
-  const {
-    name,
-    area,
-    capital,
-    languages,
-    flags,
-    currencies,
-    population,
-    region,
-    subregion,
-    ...rest
-  } = country;
-
-  //console.log(JSON.stringify(rest, null, 2));
-
   return (
     <div>
       <h1>
-        {name.common} <button onClick={() => onHideCountry()}>Hide</button>
+        {country?.name.common}{" "}
+        <button onClick={() => onHideCountry()}>Hide</button>
       </h1>
-      <p>
-        <b>Area: </b>
-        {area}
-      </p>
-      <p>
-        <b>Capital: </b>
-        {capital[0]}
-      </p>
-      <p>
-        <b>Currencies: </b>
-        {Object.values(currencies).map((currency) => (
-          <span key={currency.name}>
-            {currency.name} (<b>{currency.symbol}</b>)
-          </span>
-        ))}
-      </p>
-      <p>
-        <b>Population: </b>
-        {population}
-      </p>
-      <p>
-        <b>Region:</b> {region}
-      </p>
-      <p>
-        <b>Sub Region:</b> {subregion}
-      </p>
+      <section>
+        {country?.area ? (
+          <p>
+            <b>Area: </b>
+            {country?.area}
+          </p>
+        ) : null}
+        {country?.capital ? (
+          <p>
+            <b>Capital: </b>
+            {country?.capital.map((c) => c)}
+          </p>
+        ) : null}
+        {country?.currencies ? (
+          <p>
+            <b>Currencies: </b>
+            {Object.values(country?.currencies).map((currency) => (
+              <span key={currency.name}>
+                {currency.name} (<b>{currency.symbol}</b>)
+              </span>
+            ))}
+          </p>
+        ) : null}
+        {country?.population ? (
+          <p>
+            <b>Population: </b>
+            {country?.population}
+          </p>
+        ) : null}
+        {country?.region ? (
+          <p>
+            <b>Region: </b>
+            {country?.region}
+          </p>
+        ) : null}
+        {country?.subregion ? (
+          <p>
+            <b>Sub Region: </b>
+            {country?.subregion}
+          </p>
+        ) : null}
+        {country?.timezones ? (
+          <p>
+            <b>Timezones: </b>
+            {country?.timezones.map((zone, i) =>
+              i !== country?.timezones.length - 1 ? zone + ", " : zone
+            )}
+          </p>
+        ) : null}
+      </section>
 
-      <h2>Languages</h2>
-      <ul>
-        {Object.values(languages).map((lang) => (
-          <li key={lang.toLowerCase()}>{lang}</li>
-        ))}
-      </ul>
-      <img src={flags.png} alt={flags.alt} />
+      {country?.languages ? (
+        <section>
+          <h2>Languages</h2>
+          <ul>
+            {Object.values(country?.languages).map((lang) => (
+              <li key={lang.toLowerCase()}>{lang}</li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+      {country?.flags ? (
+        <section>
+          <img src={country?.flags.png} alt={country?.flags.alt} />
+        </section>
+      ) : null}
+      {country?.capital ? (
+        <section>
+          <h3>Weather in {country?.capital[0]}</h3>
+        </section>
+      ) : null}
     </div>
   );
 };
