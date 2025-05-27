@@ -3,7 +3,7 @@
 import Country from "./Country";
 import Notification from "./Notification";
 
-const FilteredCountries = ({ countries, filter }) => {
+const FilteredCountries = ({ countries, filter, setCountry }) => {
   const filteredCountries =
     filter.length === 0
       ? []
@@ -14,7 +14,7 @@ const FilteredCountries = ({ countries, filter }) => {
       : countries;
 
   return filteredCountries.length !== 0 && filteredCountries.length <= 2 ? (
-    <Country country={filteredCountries[0]} />
+    setCountry(filteredCountries[0])
   ) : filteredCountries.length <= 10 ? (
     filteredCountries.map((country) => (
       <p key={country.name.common.toLowerCase()}>{country.name.common}</p>
