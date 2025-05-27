@@ -40,10 +40,8 @@ function App() {
         return countryName.includes(filter.toLowerCase());
       });
 
-      console.log("filter list:", filtered);
-
       if (filtered.length === 1) {
-        console.log("should show ", filteredCountries[0].name.common);
+        console.log("should show ", filtered[0].name.common);
         setCountry(filtered[0]);
       }
 
@@ -69,6 +67,16 @@ function App() {
     }
   };
 
+  const onShowCountry = (countryToShow) => {
+    console.log("show", countryToShow.name.common);
+    setCountry(countryToShow);
+  };
+
+  const onHideCountry = () => {
+    console.log("hide country");
+    setCountry(null);
+  };
+
   useEffect(() => {
     console.log("getting all countries");
     countriesService
@@ -81,14 +89,17 @@ function App() {
       <Filter filter={filter} onFilter={onFilter} />
 
       {country !== null ? (
-        <Country country={country} />
+        <Country country={country} onHideCountry={onHideCountry} />
       ) : notificationMsg !== null ? (
         <Notification
           message={notificationMsg.msg}
           type={notificationMsg.type}
         />
       ) : (
-        <CountriesList countries={filteredCountries} />
+        <CountriesList
+          countries={filteredCountries}
+          onShowCountry={onShowCountry}
+        />
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 /** @format */
 
-const Country = ({ country }) => {
+const Country = ({ country, onHideCountry }) => {
   const {
     name,
     area,
@@ -18,7 +18,9 @@ const Country = ({ country }) => {
 
   return (
     <div>
-      <h1>{name.common}</h1>
+      <h1>
+        {name.common} <button onClick={() => onHideCountry()}>Hide</button>
+      </h1>
       <p>
         <b>Area: </b>
         {area}

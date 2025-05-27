@@ -1,8 +1,11 @@
 /** @format */
 
-const CountriesList = ({ countries }) => {
+const CountriesList = ({ countries, onShowCountry }) => {
   return countries.map((country) => (
-    <p key={country.name.common.toLowerCase()}>{country.name.common}</p>
+    <p key={country.name.common.toLowerCase()}>
+      {country.name.common}{" "}
+      <button onClick={() => onShowCountry(country)}>Show</button>
+    </p>
   ));
 };
 
