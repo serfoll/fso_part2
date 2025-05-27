@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import countriesService from "./services/countries";
 
 import Filter from "./components/Filter";
-import CountryList from "./components/CountryList";
+import CountriesList from "./components/CountriesList";
 import Country from "./components/Country";
 import Notification from "./components/Notification";
 
@@ -39,6 +39,8 @@ function App() {
         const countryName = country.name.common.toLowerCase();
         return countryName.includes(filter.toLowerCase());
       });
+
+      console.log("filter list:", filtered);
 
       if (filtered.length === 1) {
         console.log("should show ", filteredCountries[0].name.common);
@@ -86,7 +88,7 @@ function App() {
           type={notificationMsg.type}
         />
       ) : (
-        <CountryList countries={filteredCountries} />
+        <CountriesList countries={filteredCountries} />
       )}
     </div>
   );
