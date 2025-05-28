@@ -2,8 +2,8 @@
 import helpers from "../utils/helpers";
 
 const Country = ({ country, onHideCountry }) => {
-  const { temp, weather, wind } = country.weatherData;
-  console.log(wind);
+  const { temp = {}, weather = [], wind = {} } = country.weatherData || {};
+
   return (
     <div>
       <h1>
@@ -76,9 +76,13 @@ const Country = ({ country, onHideCountry }) => {
           <img src={country?.flags.png} alt={country?.flags.alt} />
         </section>
       ) : null}
-      {country?.capital && weather ? (
+      {country?.capital && country.weatherData ? (
         <section>
           <h3>Weather in {country?.capital[0]}</h3>
+          <p>
+            <b>Condition: </b>
+            {weather[0]?.description}
+          </p>
           <p>
             <b>Temprature: </b> {temp?.temp}°C /{" "}
             {helpers.celcToFahr(temp?.temp).toFixed(2)}°F

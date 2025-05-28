@@ -71,15 +71,17 @@ function App() {
 
   const onShowCountry = async (country) => {
     console.log("show", country?.name.common);
-    const { main, weather, wind } = await onGetWeather(country);
+    if (country?.capital) {
+      const { main, weather, wind } = await onGetWeather(country);
 
-    const weatherData = {
-      temp: main,
-      weather: weather,
-      wind: wind,
-    };
-    const countryToShow = { ...country, weatherData };
-    setCountry(countryToShow);
+      const weatherData = {
+        temp: main,
+        weather: weather,
+        wind: wind,
+      };
+      const countryToShow = { ...country, weatherData };
+      setCountry(countryToShow);
+    } else setCountry(country);
   };
 
   const onHideCountry = () => {

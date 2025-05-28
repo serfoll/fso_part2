@@ -7,4 +7,8 @@ const mpsToMph = (mps) => {
   return mps * 2.23694;
 };
 
-export default { celcToFahr, mpsToMph };
+const simplifyCapitalName = (name) => {
+  return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
+
+export default { celcToFahr, mpsToMph, simplifyCapitalName };
