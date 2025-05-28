@@ -1,6 +1,9 @@
 /** @format */
+import helpers from "../utils/helpers";
 
 const Country = ({ country, onHideCountry }) => {
+  const { temp, weather, wind } = country.weatherData;
+  console.log(wind);
   return (
     <div>
       <h1>
@@ -73,9 +76,21 @@ const Country = ({ country, onHideCountry }) => {
           <img src={country?.flags.png} alt={country?.flags.alt} />
         </section>
       ) : null}
-      {country?.capital ? (
+      {country?.capital && weather ? (
         <section>
           <h3>Weather in {country?.capital[0]}</h3>
+          <p>
+            <b>Temprature: </b> {temp?.temp}°C /{" "}
+            {helpers.celcToFahr(temp?.temp).toFixed(2)}°F
+          </p>
+          <img
+            src={`https://openweathermap.org/img/wn/${weather[0]?.icon}@2x.png`}
+            alt="weather icon"
+          />
+          <p>
+            <b>Wind: </b>
+            {wind?.speed} m/s / {helpers.mpsToMph(wind.speed).toFixed(2)} mph
+          </p>
         </section>
       ) : null}
     </div>
