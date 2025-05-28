@@ -21,7 +21,7 @@ function App() {
 
     if (pattern.test(input)) return;
 
-    console.log("filter word:", newFilter.trim());
+    // console.log("filter word:", newFilter.trim());
     setFilter(newFilter);
 
     if (newFilter !== "") filterCountries(newFilter);
@@ -43,7 +43,7 @@ function App() {
 
       if (filtered.length === 1) {
         const country = filtered[0];
-        console.log("should show ", country?.name.common);
+        // console.log("should show ", country?.name.common);
         onShowCountry(country);
       }
 
@@ -70,7 +70,7 @@ function App() {
   };
 
   const onShowCountry = async (country) => {
-    console.log("show", country?.name.common);
+    // console.log("show", country?.name.common);
     if (country?.capital) {
       const { main, weather, wind } = await onGetWeather(country);
 
@@ -85,18 +85,18 @@ function App() {
   };
 
   const onHideCountry = () => {
-    console.log("hide country");
+    //console.log("hide country");
     setCountry(null);
   };
 
   const onGetWeather = async (country) => {
     if (!country?.capital) return null;
-    console.log(
-      "getting weather for",
-      country?.capital[0],
-      "in",
-      country?.name.common
-    );
+    // console.log(
+    //   "getting weather for",
+    //   country?.capital[0],
+    //   "in",
+    //   country?.name.common
+    // );
 
     const weatherData = await weatherServices.getWeather(country?.capital[0]);
 
@@ -110,14 +110,6 @@ function App() {
       .getAll()
       .then((countriesData) => setCountries(countriesData));
   }, []);
-
-  // useEffect(() => {
-  //   if (countries.length > 0) {
-  //     console.log("total countries:", countries.length);
-  //     const capitals = countries.filter((c) => !c.capital);
-  //     console.log("continents", capitals);
-  //   }
-  // }, [countries]);
 
   return (
     <div>

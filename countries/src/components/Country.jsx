@@ -23,6 +23,12 @@ const Country = ({ country, onHideCountry }) => {
             {country?.capital.map((c) => c)}
           </p>
         ) : null}
+        {country?.continents ? (
+          <p>
+            <b>Continent: </b>
+            {country?.continents.map((c) => c)}
+          </p>
+        ) : null}
         {country?.currencies ? (
           <p>
             <b>Currencies: </b>
