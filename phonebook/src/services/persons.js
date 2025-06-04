@@ -2,13 +2,9 @@
 
 import axios from "axios";
 
-const env = import.meta.env.VITE_ENV;
-const devUrl = import.meta.env.VITE_DEV_API_URL;
-const prodUrl = import.meta.env.VITE_PROD_API_URL;
-const baseUrl = env.toLowerCase() === "dev" ? devUrl : prodUrl;
+const baseUrl = "/api/persons";
 
 const getAll = () => {
-  console.log("base url", env, baseUrl);
   const req = axios.get(baseUrl);
 
   const data = req
