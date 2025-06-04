@@ -31,9 +31,8 @@ const deletePerson = (id) => {
   const req = axios.delete(`${baseUrl}/${id}`);
 
   const data = req
-    .then((res) => res.data)
+    .then((res) => res.status)
     .catch((err) => console.error(`failed to delete id ${id}, reason: ${err}`));
-
   return data;
 };
 
