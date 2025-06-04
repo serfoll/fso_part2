@@ -127,29 +127,25 @@ const App = () => {
   };
 
   const onDeletePerson = (person) => {
-    console.log("person to delete", person.id);
-
-    if (window.confirm(`Delete ${person.name}`)) {
+    const { id, name } = person;
+    if (window.confirm(`Delete ${name}`)) {
       personsServices
-        .deletePerson(person.id)
-        .then((personDeleted) => {
-          console.log("person delete", personDeleted);
-          setPersons(
-            persons.filter((person) => person.id !== personDeleted.id)
-          );
+        .deletePerson(id)
+        .then((deleteStatus) => {
+          console.log("person deleted", deleteStatus);
           setNotificationMessage({
-            text: `"${person.name}" has been deleted`,
+            text: `"${name}" has been deleted`,
             type: "success",
           });
         })
         .catch(() => {
           setNotificationMessage({
-            text: `"${person.name}" already deleted`,
+            text: `"${name}" already deleted`,
             type: "error",
           });
-          setPersons(
-            persons.filter((currentPerson) => currentPerson.id !== person.id)
-          );
+        })
+        .finally(() => {
+          setPersons((prev) => prev.filter((person) => person.id !== id));
         });
     }
   };
