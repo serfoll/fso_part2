@@ -24,7 +24,6 @@ const PersonForm = ({
         id="number"
         name="number"
         onChange={(e) => setNewNumber(e.target.value.trim())}
-        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
         placeholder="012-347-6780"
         type="tel"
         value={newNumber}

@@ -85,9 +85,10 @@ const App = () => {
         });
         // console.log("person added: ", newPerson);
       })
-      .catch(() => {
+      .catch((error) => {
+        const msg = helpers.errorMsg(error);
         setNotificationMessage({
-          text: `Failed to add "${newPerson.name}" `,
+          text: msg,
           type: "error",
         });
       });
@@ -99,6 +100,7 @@ const App = () => {
         `"${person.name}" is already in phonebook, would you like to update the number?`
       )
     ) {
+      //console.log(person.id);
       personsServices
         .update(person.id, person)
         .then((updatedPerson) => {
@@ -114,12 +116,13 @@ const App = () => {
           setNewName("");
           setNewNumber("");
         })
-        .catch(() => {
+        .catch((error) => {
+          //console.log(error);
+          const msg = helpers.errorMsg(error);
           setNotificationMessage({
-            text: `"${person.name}" is already removed from the server`,
+            text: msg,
             type: "error",
           });
-          setPersons(persons.filter((p) => p.id !== person.id));
         });
     }
   };
@@ -156,7 +159,7 @@ const App = () => {
 
   useEffect(() => {
     if (notificationMessage) {
-      const timer = setTimeout(() => setNotificationMessage(null), 4000);
+      const timer = setTimeout(() => setNotificationMessage(null), 5000);
       return () => clearTimeout(timer);
     }
   }, [notificationMessage]);
