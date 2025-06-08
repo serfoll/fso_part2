@@ -37,7 +37,6 @@ const deletePerson = (id) => {
 };
 
 const update = (id, personObj) => {
-  console.log("should update", personObj.name, "with id:", id);
   const req = axios.put(`${baseUrl}/${id}`, personObj);
   const data = req
     .then((res) => res.data)

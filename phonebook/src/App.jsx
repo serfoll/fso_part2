@@ -73,8 +73,6 @@ const App = () => {
   };
 
   const createPerson = (newPerson) => {
-    console.log("new person to add", newPerson);
-
     personsServices
       .create(newPerson)
       .then((personCreated) => {
@@ -85,7 +83,7 @@ const App = () => {
           text: `"${personCreated.name}" has been added`,
           type: "success",
         });
-        console.log("person added: ", newPerson);
+        // console.log("person added: ", newPerson);
       })
       .catch(() => {
         setNotificationMessage({
@@ -96,8 +94,6 @@ const App = () => {
   };
 
   const updatePerson = (person) => {
-    console.log("person to update", person);
-
     if (
       window.confirm(
         `"${person.name}" is already in phonebook, would you like to update the number?`
@@ -115,6 +111,8 @@ const App = () => {
             text: `"${person.name}" has been updated`,
             type: "success",
           });
+          setNewName("");
+          setNewNumber("");
         })
         .catch(() => {
           setNotificationMessage({
@@ -152,7 +150,6 @@ const App = () => {
 
   useEffect(() => {
     personsServices.getAll().then((initialPersons) => {
-      console.log("getAll result:", initialPersons);
       setPersons(initialPersons);
     });
   }, []);
