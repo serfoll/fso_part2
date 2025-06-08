@@ -73,8 +73,6 @@ const App = () => {
   };
 
   const createPerson = (newPerson) => {
-    console.log("new person to add", newPerson);
-
     personsServices
       .create(newPerson)
       .then((personCreated) => {
@@ -85,24 +83,24 @@ const App = () => {
           text: `"${personCreated.name}" has been added`,
           type: "success",
         });
-        console.log("person added: ", newPerson);
+        // console.log("person added: ", newPerson);
       })
-      .catch(() => {
+      .catch((error) => {
+        const msg = helpers.errorMsg(error);
         setNotificationMessage({
-          text: `Failed to add "${newPerson.name}" `,
+          text: msg,
           type: "error",
         });
       });
   };
 
   const updatePerson = (person) => {
-    console.log("person to update", person);
-
     if (
       window.confirm(
         `"${person.name}" is already in phonebook, would you like to update the number?`
       )
     ) {
+      //console.log(person.id);
       personsServices
         .update(person.id, person)
         .then((updatedPerson) => {
@@ -115,13 +113,16 @@ const App = () => {
             text: `"${person.name}" has been updated`,
             type: "success",
           });
+          setNewName("");
+          setNewNumber("");
         })
-        .catch(() => {
+        .catch((error) => {
+          //console.log(error);
+          const msg = helpers.errorMsg(error);
           setNotificationMessage({
-            text: `"${person.name}" is already removed from the server`,
+            text: msg,
             type: "error",
           });
-          setPersons(persons.filter((p) => p.id !== person.id));
         });
     }
   };
@@ -152,14 +153,13 @@ const App = () => {
 
   useEffect(() => {
     personsServices.getAll().then((initialPersons) => {
-      console.log("getAll result:", initialPersons);
       setPersons(initialPersons);
     });
   }, []);
 
   useEffect(() => {
     if (notificationMessage) {
-      const timer = setTimeout(() => setNotificationMessage(null), 4000);
+      const timer = setTimeout(() => setNotificationMessage(null), 5000);
       return () => clearTimeout(timer);
     }
   }, [notificationMessage]);

@@ -9,8 +9,8 @@ const getAll = () => {
 
   const data = req
     .then((res) => res.data)
-    .catch((err) => {
-      console.error(`failed to get all persons, reason: ${err}`);
+    .catch((error) => {
+      throw new Error(`failed to get all persons: ${error}`);
     });
 
   return data;
@@ -20,8 +20,8 @@ const create = (personObj) => {
   const req = axios.post(baseUrl, personObj);
   const data = req
     .then((res) => res.data)
-    .catch((err) => {
-      console.error(`failed to add ${personObj.name}. reason: ${err}`);
+    .catch((error) => {
+      throw new Error(error.response.data.error);
     });
 
   return data;
@@ -32,18 +32,20 @@ const deletePerson = (id) => {
 
   const data = req
     .then((res) => res.status)
-    .catch((err) => console.error(`failed to delete id ${id}, reason: ${err}`));
+    .catch((error) => {
+      throw new Error(error.response.data.error);
+    });
   return data;
 };
 
 const update = (id, personObj) => {
-  console.log("should update", personObj.name, "with id:", id);
   const req = axios.put(`${baseUrl}/${id}`, personObj);
+
   const data = req
     .then((res) => res.data)
-    .catch((err) =>
-      console.error(`failed to update ${personObj.name}, reason: ${err}`)
-    );
+    .catch((error) => {
+      throw new Error(error.response.data.error);
+    });
 
   return data;
 };
